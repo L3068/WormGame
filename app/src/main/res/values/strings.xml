@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Worm Game</string>
+    <string name="title_name">Worm Game</string>
+    <string name="log_name">Login</string>
+    <string name="reg_name">Register</string>
+    <string name="user_name">Username</string>
+    <string name="password_name">Password</string>
+    <string name="button_cancel_name">Cancel</string>
+    <string name="button_skin_name">Change Skin</string>
+    <string name="button_play_name">Play</string>
+    <string name="button_up_name">UP</string>
+    <string name="button_down_name">DOWN</string>
+    <string name="button_left_name">LEFT</string>
+    <string name="button_right_name">RIGHT</string>
+    <string name="button_score_name">Score</string>
+    <string name="button_gameover_name">Game Over! Try Again</string>
+    <string name="button_resume_name">Resume</string>
+    <string name="button_newgame_name">New Game</string>
+    <string name="button_pause_name">Pause</string>
+    <string name="yourscore_name">Your score: </string>
+    <string name="pleasefill_name">Please fill in all fields</string>
+    <string name="loginsucc_name">Login successful!</string>
+    <string name="logfail_name">Login failed</string>
+</resources>

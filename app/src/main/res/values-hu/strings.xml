@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Kukac Játék</string>
+    <string name="title_name">Kukac Játék</string>
+    <string name="log_name">Bejelentkezés</string>
+    <string name="reg_name">Regisztráció</string>
+    <string name="user_name">Felhasználónév</string>
+    <string name="password_name">Jelszó</string>
+    <string name="button_cancel_name">Mégse</string>
+    <string name="button_skin_name">Kinézet változtatása</string>
+    <string name="button_play_name">Játék</string>
+    <string name="button_up_name">FEL</string>
+    <string name="button_down_name">LE</string>
+    <string name="button_left_name">BALRA</string>
+    <string name="button_right_name">JOBBRA</string>
+    <string name="button_score_name">Pontszám</string>
+    <string name="button_gameover_name">Játék Vége! Próbáld Újra</string>
+    <string name="button_resume_name">Folytatás</string>
+    <string name="button_newgame_name">Új Játék</string>
+    <string name="button_pause_name">Szünet</string>
+    <string name="yourscore_name">Az elért pontszámod: </string>
+    <string name="pleasefill_name">Kérem töltse ki az összes mezőt</string>
+    <string name="loginsucc_name">Sikeres bejelentkezés!</string>
+    <string name="logfail_name">Sikertelen bejelentkezés"></string>
+</resources>
