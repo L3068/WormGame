@@ -1,6 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")
+}
+
+// A google-services.json projektspecifikus és nincs verziókövetve (lásd README).
+// Ha hiányzik, a Firebase plugin nélkül is lefordul a projekt – így a repo
+// klónozás után azonnal buildelhető, a Firebase funkciók viszont nem működnek.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+} else {
+    logger.lifecycle(
+        "app/google-services.json hiányzik – a build Firebase konfiguráció nélkül készül. " +
+            "A bejelentkezés/regisztráció csak saját google-services.json fájllal működik."
+    )
 }
 
 android {
@@ -30,26 +41,20 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        viewBinding = true
-    }
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
-    implementation("com.google.firebase:firebase-database-ktx:20.3.0")
-    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation(libs.appcompat)
+    implementation(libs.core)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.firebase.database)
-    implementation(libs.navigation.fragment)
-    implementation(libs.navigation.ui)
-    implementation(libs.annotation)
-    implementation(libs.lifecycle.livedata.ktx)
-    implementation(libs.lifecycle.viewmodel.ktx)
+
+    // A Firebase könyvtárak verzióját a BOM tartja szinkronban.
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

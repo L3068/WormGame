@@ -13,7 +13,7 @@
         android:background="@color/green"
         android:textStyle="bold"
         android:textColor="@color/black"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:text="@string/button_score_name"
         app:layout_constraintBottom_toTopOf="@+id/lilu"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="120dp"
             android:layout_marginTop="140dp"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:text="@string/button_gameover_name">
         </Button>
 
@@ -85,7 +85,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="120dp"
             android:layout_marginTop="60dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:text="@string/button_gameover_name">
 

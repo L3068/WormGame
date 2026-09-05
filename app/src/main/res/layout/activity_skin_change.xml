@@ -10,6 +10,7 @@
 
     <ImageButton
         android:id="@+id/imageView3"
+        android:contentDescription="@string/skin_purple_desc"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="64dp"
@@ -22,6 +23,7 @@
 
     <ImageButton
         android:id="@+id/imageView"
+        android:contentDescription="@string/skin_green_desc"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="48dp"
@@ -34,6 +36,7 @@
 
     <ImageButton
         android:id="@+id/imageView2"
+        android:contentDescription="@string/skin_red_desc"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="52dp"
