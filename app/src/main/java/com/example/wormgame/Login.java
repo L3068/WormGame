@@ -1,4 +1,4 @@
-package com.example.snakegame;
+package com.example.wormgame;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+/** Bejelentkezés utáni főmenü: játék indítása és kinézet választás. */
 public class Login extends AppCompatActivity {
 
     @Override
@@ -23,18 +24,10 @@ public class Login extends AppCompatActivity {
             return insets;
         });
 
-        //Play
         Button play = findViewById(R.id.button3);
-        play.setOnClickListener(v -> {
-            Intent intent = new Intent(Login.this, Wormgame.class);
-            startActivity(intent);
-        });
+        play.setOnClickListener(v -> startActivity(new Intent(this, Wormgame.class)));
 
-        //Skin change
         Button skin = findViewById(R.id.button4);
-        skin.setOnClickListener(v -> {
-            Intent intent = new Intent(Login.this, SkinChange.class);
-            startActivity(intent);
-        });
+        skin.setOnClickListener(v -> startActivity(new Intent(this, SkinChange.class)));
     }
 }

@@ -1,10 +1,9 @@
-package com.example.snakegame;
+package com.example.wormgame;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,21 +14,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean isHungarian = false;
-    EditText emailEditText;
-    EditText passwordEditText;
-    FirebaseDatabase database = FirebaseDatabase.getInstance("https://snake-game-5c318-default-rtdb.europe-west1.firebasedatabase.app/");
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    DatabaseReference myRef = database.getReference("adatok");
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,57 +35,60 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        //Database
-        /*myRef.setValue("Hello, World!");
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("TAG", "Value is: " + value);
-                Toast.makeText(MainActivity.this, value, Toast.LENGTH_LONG).show();
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("TAG", "Failed to read value.", error.toException());
-            }
-        });*/
-
-        //Register
-        Button register = findViewById(R.id.button2);
-        register.setOnClickListener(v -> {
-           Intent intent = new Intent(this, Register.class);
-           startActivity(intent);
-        });
-
-        //Login
-        Button login = findViewById(R.id.button5);
         emailEditText = findViewById(R.id.editTextText);
         passwordEditText = findViewById(R.id.editTextTextPassword);
-        login.setOnClickListener(v -> loginUser());
+        loginButton = findViewById(R.id.button5);
+        Button register = findViewById(R.id.button2);
+
+        // google-services.json nélkül nincs alapértelmezett FirebaseApp, és a
+        // FirebaseAuth.getInstance() kivételt dobna. Ilyenkor összeomlás helyett
+        // letiltjuk a bejelentkezést, és megmondjuk, mi hiányzik (lásd README).
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            Toast.makeText(this, R.string.firebase_missing, Toast.LENGTH_LONG).show();
+            emailEditText.setEnabled(false);
+            passwordEditText.setEnabled(false);
+            loginButton.setEnabled(false);
+            register.setEnabled(false);
+            return;
+        }
+
+        mAuth = FirebaseAuth.getInstance();
+        register.setOnClickListener(v -> startActivity(new Intent(this, Register.class)));
+        loginButton.setOnClickListener(v -> loginUser());
     }
 
     private void loginUser() {
         String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, getString(R.string.pleasefill_name), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.pleasefill_name, Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError(getString(R.string.invalid_email));
+            return;
+        }
+
+        // Dupla kattintás ne indítson két bejelentkezést.
+        loginButton.setEnabled(false);
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
+                .addOnCompleteListener(this, task -> {
+                    loginButton.setEnabled(true);
                     if (task.isSuccessful()) {
-                        // Login successful
-                        Toast.makeText(this, getString(R.string.loginsucc_name), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(this, Login.class);
-                        startActivity(intent);
+                        Toast.makeText(this, R.string.loginsucc_name, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, Login.class));
                         finish();
                     } else {
-                        // Login failed
-                        Toast.makeText(this, getString(R.string.logfail_name)+": " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, getString(R.string.logfail_format, errorMessage(task.getException())),
+                                Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    /** A Firebase hibaüzenete néha hiányzik – ilyenkor általános szöveget mutatunk. */
+    private String errorMessage(Exception exception) {
+        String message = exception != null ? exception.getLocalizedMessage() : null;
+        return TextUtils.isEmpty(message) ? getString(R.string.unknown_error) : message;
     }
 }

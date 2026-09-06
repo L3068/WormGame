@@ -3,6 +3,7 @@
     <string name="title_name">Kukac Játék</string>
     <string name="log_name">Bejelentkezés</string>
     <string name="reg_name">Regisztráció</string>
+    <string name="email_name">E-mail</string>
     <string name="user_name">Felhasználónév</string>
     <string name="password_name">Jelszó</string>
     <string name="button_cancel_name">Mégse</string>
@@ -17,8 +18,18 @@
     <string name="button_resume_name">Folytatás</string>
     <string name="button_newgame_name">Új Játék</string>
     <string name="button_pause_name">Szünet</string>
-    <string name="yourscore_name">Az elért pontszámod: </string>
+    <string name="score_format">Pontszám: %1$d</string>
+    <string name="yourscore_format">Az elért pontszámod: %1$d</string>
     <string name="pleasefill_name">Kérem töltse ki az összes mezőt</string>
     <string name="loginsucc_name">Sikeres bejelentkezés!</string>
-    <string name="logfail_name">Sikertelen bejelentkezés"></string>
+    <string name="logfail_format">Sikertelen bejelentkezés: %1$s</string>
+    <string name="regsucc_name">Sikeres regisztráció!</string>
+    <string name="regfail_format">Sikertelen regisztráció: %1$s</string>
+    <string name="invalid_email">Adj meg egy érvényes e-mail címet</string>
+    <string name="password_too_short">A jelszónak legalább %1$d karakter hosszúnak kell lennie</string>
+    <string name="unknown_error">Ismeretlen hiba</string>
+    <string name="skin_green_desc">Zöld kukac kinézet</string>
+    <string name="skin_red_desc">Piros kukac kinézet</string>
+    <string name="skin_purple_desc">Lila kukac kinézet</string>
+    <string name="firebase_missing">A Firebase nincs beállítva (hiányzik a google-services.json), ezért a bejelentkezés nem érhető el.</string>
 </resources>

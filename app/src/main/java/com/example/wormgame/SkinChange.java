@@ -1,68 +1,68 @@
-package com.example.snakegame;
+package com.example.wormgame;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class SkinChange extends AppCompatActivity {
-    ImageView imageView1, imageView2, imageView3;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
+
+    /** A játék beállításait tároló SharedPreferences neve. */
+    public static final String PREFS_NAME = "WormGamePrefs";
+    /** A kiválasztott kinézet kulcsa. */
+    public static final String KEY_SELECTED_SKIN = "selected_skin";
+
+    public static final int SKIN_GREEN = 1;
+    public static final int SKIN_RED = 2;
+    public static final int SKIN_PURPLE = 3;
+
+    private static final int SELECTED_COLOR = Color.parseColor("#8A8787");
+
+    private ImageButton greenSkin, redSkin, purpleSkin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_skin_change);
 
-        prefs = getSharedPreferences("SnakeGamePrefs", MODE_PRIVATE);
-        editor = prefs.edit();
+        greenSkin = findViewById(R.id.imageView);
+        redSkin = findViewById(R.id.imageView2);
+        purpleSkin = findViewById(R.id.imageView3);
 
-        imageView1 = findViewById(R.id.imageView);
-        imageView2 = findViewById(R.id.imageView2);
-        imageView3 = findViewById(R.id.imageView3);
+        // Visszaállítjuk a korábban kiválasztott kinézetet.
+        updateSelection(getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getInt(KEY_SELECTED_SKIN, SKIN_GREEN));
 
-        // Visszaállítjuk a kiválasztott hátteret
-        int selectedSkin = prefs.getInt("selected_skin", 1);
-        updateSelection(selectedSkin);
-
-        // Kattintáskezelők
-        imageView1.setOnClickListener(v -> selectSkin(1));
-        imageView2.setOnClickListener(v -> selectSkin(2));
-        imageView3.setOnClickListener(v -> selectSkin(3));
+        greenSkin.setOnClickListener(v -> selectSkin(SKIN_GREEN));
+        redSkin.setOnClickListener(v -> selectSkin(SKIN_RED));
+        purpleSkin.setOnClickListener(v -> selectSkin(SKIN_PURPLE));
     }
 
     private void selectSkin(int skinId) {
         updateSelection(skinId);
-        editor.putInt("selected_skin", skinId);
-        editor.apply();
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putInt(KEY_SELECTED_SKIN, skinId)
+                .apply();
     }
 
     private void updateSelection(int selectedSkin) {
-        imageView1.setBackgroundColor(Color.TRANSPARENT);
-        imageView2.setBackgroundColor(Color.TRANSPARENT);
-        imageView3.setBackgroundColor(Color.TRANSPARENT);
+        greenSkin.setBackgroundColor(Color.TRANSPARENT);
+        redSkin.setBackgroundColor(Color.TRANSPARENT);
+        purpleSkin.setBackgroundColor(Color.TRANSPARENT);
 
         switch (selectedSkin) {
-            case 1:
-                imageView1.setBackgroundColor(Color.parseColor("#8A8787"));
+            case SKIN_RED:
+                redSkin.setBackgroundColor(SELECTED_COLOR);
                 break;
-            case 2:
-                imageView2.setBackgroundColor(Color.parseColor("#8A8787"));
+            case SKIN_PURPLE:
+                purpleSkin.setBackgroundColor(SELECTED_COLOR);
                 break;
-            case 3:
-                imageView3.setBackgroundColor(Color.parseColor("#8A8787"));
+            case SKIN_GREEN:
+            default:
+                greenSkin.setBackgroundColor(SELECTED_COLOR);
                 break;
         }
     }
-
 }

@@ -3,6 +3,7 @@
     <string name="title_name">Worm Game</string>
     <string name="log_name">Login</string>
     <string name="reg_name">Register</string>
+    <string name="email_name">Email</string>
     <string name="user_name">Username</string>
     <string name="password_name">Password</string>
     <string name="button_cancel_name">Cancel</string>
@@ -17,8 +18,18 @@
     <string name="button_resume_name">Resume</string>
     <string name="button_newgame_name">New Game</string>
     <string name="button_pause_name">Pause</string>
-    <string name="yourscore_name">Your score: </string>
+    <string name="score_format">Score: %1$d</string>
+    <string name="yourscore_format">Your score: %1$d</string>
     <string name="pleasefill_name">Please fill in all fields</string>
     <string name="loginsucc_name">Login successful!</string>
-    <string name="logfail_name">Login failed</string>
+    <string name="logfail_format">Login failed: %1$s</string>
+    <string name="regsucc_name">Registration successful!</string>
+    <string name="regfail_format">Registration failed: %1$s</string>
+    <string name="invalid_email">Please enter a valid email address</string>
+    <string name="password_too_short">The password must be at least %1$d characters long</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="skin_green_desc">Green worm skin</string>
+    <string name="skin_red_desc">Red worm skin</string>
+    <string name="skin_purple_desc">Purple worm skin</string>
+    <string name="firebase_missing">Firebase is not configured (google-services.json is missing), so sign-in is unavailable.</string>
 </resources>
