@@ -32,4 +32,9 @@
     <string name="skin_red_desc">Piros kukac kinézet</string>
     <string name="skin_purple_desc">Lila kukac kinézet</string>
     <string name="firebase_missing">A Firebase nincs beállítva (hiányzik a google-services.json), ezért a bejelentkezés nem érhető el.</string>
+    <string name="button_logout_name">Kijelentkezés</string>
+    <string name="forgot_password_name">Elfelejtetted a jelszavad?</string>
+    <string name="reset_sent">Ha a cím regisztrálva van, elküldtük a jelszó-visszaállító levelet.</string>
+    <string name="reset_failed_format">A visszaállító levelet nem sikerült elküldeni: %1$s</string>
+    <string name="bestscore_format">Legjobb: %1$d</string>
 </resources>

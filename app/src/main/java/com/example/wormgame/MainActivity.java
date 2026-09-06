@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.editTextTextPassword);
         loginButton = findViewById(R.id.button5);
         Button register = findViewById(R.id.button2);
+        Button forgotPassword = findViewById(R.id.forgot_password);
 
         // google-services.json nélkül nincs alapértelmezett FirebaseApp, és a
         // FirebaseAuth.getInstance() kivételt dobna. Ilyenkor összeomlás helyett
@@ -49,12 +50,42 @@ public class MainActivity extends AppCompatActivity {
             passwordEditText.setEnabled(false);
             loginButton.setEnabled(false);
             register.setEnabled(false);
+            forgotPassword.setEnabled(false);
             return;
         }
 
         mAuth = FirebaseAuth.getInstance();
         register.setOnClickListener(v -> startActivity(new Intent(this, Register.class)));
         loginButton.setOnClickListener(v -> loginUser());
+        forgotPassword.setOnClickListener(v -> resetPassword());
+    }
+
+    /**
+     * Jelszó-visszaállító levél küldése a megadott e-mail címre. A Firebase
+     * ismeretlen címnél is sikert jelez, hogy ne lehessen vele felhasználót
+     * felderíteni – ezért az üzenet is semleges.
+     */
+    private void resetPassword() {
+        String email = emailEditText.getText().toString().trim();
+
+        if (email.isEmpty()) {
+            emailEditText.setError(getString(R.string.pleasefill_name));
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError(getString(R.string.invalid_email));
+            return;
+        }
+
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, R.string.reset_sent, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(this, getString(R.string.reset_failed_format,
+                                errorMessage(task.getException())), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void loginUser() {
