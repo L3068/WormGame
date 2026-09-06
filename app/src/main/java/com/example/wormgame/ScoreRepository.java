@@ -58,8 +58,16 @@ final class ScoreRepository {
         if (user == null) {
             return new ScoreRepository(null);
         }
-        return new ScoreRepository(
-                FirebaseDatabase.getInstance().getReference("users").child(user.getUid()));
+        try {
+            return new ScoreRepository(
+                    FirebaseDatabase.getInstance().getReference("users").child(user.getUid()));
+        } catch (RuntimeException e) {
+            // Ha a projektben nincs Realtime Database, a getInstance() kivételt dob
+            // (a google-services.json ilyenkor firebase_url nélkül érkezik). Ez nem
+            // ok az összeomlásra: a pontszám mentése marad ki, a játék megy tovább.
+            Log.w(TAG, "A Realtime Database nem érhető el, a pontszámok nem lesznek mentve", e);
+            return new ScoreRepository(null);
+        }
     }
 
     boolean isAvailable() {

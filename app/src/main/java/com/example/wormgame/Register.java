@@ -3,12 +3,14 @@ package com.example.wormgame;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -54,7 +56,7 @@ public class Register extends AppCompatActivity {
         }
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = database();
 
         registerButton.setOnClickListener(v -> registerUser());
     }
@@ -88,7 +90,7 @@ public class Register extends AppCompatActivity {
                     }
 
                     FirebaseUser user = mAuth.getCurrentUser();
-                    if (user != null) {
+                    if (user != null && mDatabase != null) {
                         // A felhasználónevet a Realtime Database-be mentjük.
                         mDatabase.child("users").child(user.getUid()).child("username").setValue(username);
                     }
@@ -97,6 +99,21 @@ public class Register extends AppCompatActivity {
                     startActivity(new Intent(this, Login.class));
                     finish();
                 });
+    }
+
+    /**
+     * Az adatbázis gyökere, vagy null, ha a projektben nincs Realtime Database.
+     * Ilyenkor a {@code getInstance()} kivételt dobna – a regisztráció viszont
+     * enélkül is működik, csak a felhasználónév mentése marad ki.
+     */
+    @Nullable
+    private DatabaseReference database() {
+        try {
+            return FirebaseDatabase.getInstance().getReference();
+        } catch (RuntimeException e) {
+            Log.w("Register", "A Realtime Database nem érhető el", e);
+            return null;
+        }
     }
 
     /** A Firebase hibaüzenete néha hiányzik – ilyenkor általános szöveget mutatunk. */
