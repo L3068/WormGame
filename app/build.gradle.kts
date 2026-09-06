@@ -15,10 +15,13 @@ if (file("google-services.json").exists()) {
 }
 
 android {
-    namespace = "com.example.snakegame"
+    namespace = "com.example.wormgame"
     compileSdk = 35
 
     defaultConfig {
+        // A csomagnév (namespace) wormgame, az applicationId viszont szándékosan
+        // maradt snakegame: a Firebase projektben ezzel a névvel van regisztrálva
+        // az alkalmazás, átírása érvénytelenítené a meglévő google-services.json-t.
         applicationId = "com.example.snakegame"
         minSdk = 28
         targetSdk = 35

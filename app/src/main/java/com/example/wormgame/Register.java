@@ -1,4 +1,4 @@
-package com.example.snakegame;
+package com.example.wormgame;
 
 import android.content.Intent;
 import android.os.Bundle;

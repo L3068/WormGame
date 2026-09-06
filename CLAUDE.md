@@ -13,10 +13,15 @@
 
 ## Projekt
 
-Android (Java) Snake játék, Gradle Kotlin DSL.
+Android (Java) kukacjáték, Gradle Kotlin DSL.
 
-- Csomagnév és `applicationId`: `com.example.snakegame`.
-- A játékszabályok az Android-független `SnakeEngine` osztályban élnek,
+- **A projekt neve Worm, nem Snake.** A források a `com/example/wormgame`
+  könyvtárban, `com.example.wormgame` csomagban élnek – ezt ne írd át
+  `snakegame`-re, és ne mozgasd át a fájlokat.
+- Az `applicationId` viszont `com.example.snakegame` maradt, mert a Firebase
+  projektben ezzel a névvel van regisztrálva az app; ugyanezért maradt a
+  `SnakeGamePrefs` SharedPreferences-fájlnév is.
+- A játékszabályok az Android-független `WormEngine` osztályban élnek,
   hozzá egységtesztek: `./gradlew testDebugUnitTest`.
 - A `google-services.json` nincs verziókövetve; a Google Services plugin
   csak akkor kerül alkalmazásra, ha a fájl megvan (lásd `app/build.gradle.kts`).

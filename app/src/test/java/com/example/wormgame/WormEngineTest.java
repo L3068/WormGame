@@ -1,13 +1,13 @@
-package com.example.snakegame;
+package com.example.wormgame;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.example.snakegame.SnakeEngine.Cell;
-import com.example.snakegame.SnakeEngine.Direction;
-import com.example.snakegame.SnakeEngine.State;
+import com.example.wormgame.WormEngine.Cell;
+import com.example.wormgame.WormEngine.Direction;
+import com.example.wormgame.WormEngine.State;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.Random;
 
 /** A játékszabályok tesztjei – emulátor nélkül futnak. */
-public class SnakeEngineTest {
+public class WormEngineTest {
 
-    private SnakeEngine engine;
+    private WormEngine engine;
 
     @Before
     public void setUp() {
         // Rögzített mag: a kaja helye determinisztikus.
-        engine = new SnakeEngine(10, 10, new Random(42));
+        engine = new WormEngine(10, 10, new Random(42));
         engine.start();
     }
 
@@ -59,7 +59,7 @@ public class SnakeEngineTest {
     /** Regresszió: korábban a jobb oldali ütközés a magassággal számolt. */
     @Test
     public void wallCollisionUsesWidthNotHeight() {
-        SnakeEngine wide = new SnakeEngine(20, 6, new Random(1));
+        WormEngine wide = new WormEngine(20, 6, new Random(1));
         wide.start();
         int steps = 0;
         while (!wide.isGameOver() && steps < 100) {
@@ -119,7 +119,7 @@ public class SnakeEngineTest {
     }
 
     @Test
-    public void eatingGrowsTheSnakeAndIncreasesScore() {
+    public void eatingGrowsTheWormAndIncreasesScore() {
         int length = engine.body().size();
         eatOnce(engine);
 
@@ -128,7 +128,7 @@ public class SnakeEngineTest {
     }
 
     @Test
-    public void foodNeverSpawnsOnTheSnake() {
+    public void foodNeverSpawnsOnTheWorm() {
         for (int i = 0; i < 5; i++) {
             List<Cell> body = engine.body();
             assertFalse("A kaja a kukacon jelent meg: " + engine.food(), body.contains(engine.food()));
@@ -172,7 +172,7 @@ public class SnakeEngineTest {
     }
 
     @Test
-    public void pauseFreezesTheSnake() {
+    public void pauseFreezesTheWorm() {
         engine.pause();
         Cell head = engine.head();
 
@@ -187,21 +187,21 @@ public class SnakeEngineTest {
     @Test
     public void speedIncreasesWithScoreButNeverBelowMinimum() {
         long start = engine.delayMillis();
-        assertEquals(SnakeEngine.START_DELAY_MILLIS, start);
+        assertEquals(WormEngine.START_DELAY_MILLIS, start);
 
         eatOnce(engine);
         assertTrue(engine.delayMillis() < start);
 
         // Regresszió: korábban a késleltetés 30-ról csökkent egyesével, tehát 30 falat
         // után nullára, majd negatívba fordult és a játék kezelhetetlenül felgyorsult.
-        SnakeEngine fast = new SnakeEngine(60, 60, new Random(3));
+        WormEngine fast = new WormEngine(60, 60, new Random(3));
         fast.setBodyForTest(line(5, 30, 3), Direction.RIGHT);
         for (int i = 0; i < 40; i++) {
             eatOnce(fast);
         }
         assertEquals(40, fast.score());
         assertFalse(fast.isGameOver());
-        assertEquals(SnakeEngine.MIN_DELAY_MILLIS, fast.delayMillis());
+        assertEquals(WormEngine.MIN_DELAY_MILLIS, fast.delayMillis());
     }
 
     @Test
@@ -212,12 +212,12 @@ public class SnakeEngineTest {
         assertEquals(0, engine.score());
         assertEquals(3, engine.body().size());
         assertEquals(State.READY, engine.state());
-        assertEquals(SnakeEngine.START_DELAY_MILLIS, engine.delayMillis());
+        assertEquals(WormEngine.START_DELAY_MILLIS, engine.delayMillis());
     }
 
     @Test
     public void readyGameDoesNotMoveBeforeStart() {
-        SnakeEngine fresh = new SnakeEngine(10, 10, new Random(11));
+        WormEngine fresh = new WormEngine(10, 10, new Random(11));
         Cell head = fresh.head();
 
         fresh.step();
@@ -235,7 +235,7 @@ public class SnakeEngineTest {
     }
 
     /** A kaját a fej elé teszi, majd lép egyet – így az evés determinisztikus. */
-    private void eatOnce(SnakeEngine target) {
+    private void eatOnce(WormEngine target) {
         Cell head = target.head();
         Direction direction = target.direction();
         target.setFoodForTest(new Cell(head.x + direction.dx, head.y + direction.dy));

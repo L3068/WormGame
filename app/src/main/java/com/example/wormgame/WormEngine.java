@@ -1,4 +1,4 @@
-package com.example.snakegame;
+package com.example.wormgame;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Random;
  * A pálya egy {@code columns} x {@code rows} méretű rács, a kukac cellákból áll,
  * a lista első eleme a fej. A megjelenítés (Wormgame) csak lekérdezi az állapotot.
  */
-public final class SnakeEngine {
+public final class WormEngine {
 
     /** Egy cella a rácson. */
     public static final class Cell {
@@ -83,12 +83,12 @@ public final class SnakeEngine {
     private State state;
     private int score;
 
-    public SnakeEngine(int columns, int rows) {
+    public WormEngine(int columns, int rows) {
         this(columns, rows, new Random());
     }
 
     /** Teszteléshez: rögzített magú {@link Random}-mal determinisztikus a kajapakolás. */
-    public SnakeEngine(int columns, int rows, Random random) {
+    public WormEngine(int columns, int rows, Random random) {
         if (columns < START_LENGTH + 1 || rows < 3) {
             throw new IllegalArgumentException("A pálya túl kicsi: " + columns + "x" + rows);
         }

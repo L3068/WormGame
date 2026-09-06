@@ -1,4 +1,4 @@
-package com.example.snakegame;
+package com.example.wormgame;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -25,10 +25,10 @@ public class Wormgame extends Activity {
     private LinearLayout lilu;
     private Button newgame, resume, playagain, score, score2;
 
-    private final List<ImageView> snakeSegments = new ArrayList<>();
+    private final List<ImageView> wormSegments = new ArrayList<>();
     private ImageView meat;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private SnakeEngine engine;
+    private WormEngine engine;
     private int skinDrawable = R.drawable.worm;
     private int cellSize;
 
@@ -64,7 +64,7 @@ public class Wormgame extends Activity {
         score = findViewById(R.id.score);
         score2 = findViewById(R.id.score2);
 
-        engine = new SnakeEngine(GRID_SIZE, GRID_SIZE);
+        engine = new WormEngine(GRID_SIZE, GRID_SIZE);
 
         board.setVisibility(View.INVISIBLE);
         playagain.setVisibility(View.INVISIBLE);
@@ -74,10 +74,10 @@ public class Wormgame extends Activity {
 
         newgame.setOnClickListener(v -> board.post(this::startGame));
 
-        upButton.setOnClickListener(v -> engine.requestDirection(SnakeEngine.Direction.UP));
-        downButton.setOnClickListener(v -> engine.requestDirection(SnakeEngine.Direction.DOWN));
-        leftButton.setOnClickListener(v -> engine.requestDirection(SnakeEngine.Direction.LEFT));
-        rightButton.setOnClickListener(v -> engine.requestDirection(SnakeEngine.Direction.RIGHT));
+        upButton.setOnClickListener(v -> engine.requestDirection(WormEngine.Direction.UP));
+        downButton.setOnClickListener(v -> engine.requestDirection(WormEngine.Direction.DOWN));
+        leftButton.setOnClickListener(v -> engine.requestDirection(WormEngine.Direction.LEFT));
+        rightButton.setOnClickListener(v -> engine.requestDirection(WormEngine.Direction.RIGHT));
         pauseButton.setOnClickListener(v -> pauseGame());
         resume.setOnClickListener(v -> resumeGame());
         playagain.setOnClickListener(v -> startGame());
@@ -102,7 +102,7 @@ public class Wormgame extends Activity {
 
         // Az előző menet nézetei nem maradhatnak a pályán.
         board.removeAllViews();
-        snakeSegments.clear();
+        wormSegments.clear();
         meat = null;
 
         cellSize = Math.max(1, Math.min(board.getWidth(), board.getHeight()) / GRID_SIZE);
@@ -123,7 +123,7 @@ public class Wormgame extends Activity {
     }
 
     private void pauseGame() {
-        if (engine.state() != SnakeEngine.State.RUNNING) {
+        if (engine.state() != WormEngine.State.RUNNING) {
             return;
         }
         engine.pause();
@@ -134,7 +134,7 @@ public class Wormgame extends Activity {
     }
 
     private void resumeGame() {
-        if (engine.state() != SnakeEngine.State.PAUSED) {
+        if (engine.state() != WormEngine.State.PAUSED) {
             return;
         }
         engine.start();
@@ -146,23 +146,23 @@ public class Wormgame extends Activity {
 
     /** Az aktuális állapot kirajzolása: cellánként egy-egy ImageView. */
     private void render() {
-        List<SnakeEngine.Cell> cells = engine.body();
+        List<WormEngine.Cell> cells = engine.body();
 
-        while (snakeSegments.size() < cells.size()) {
+        while (wormSegments.size() < cells.size()) {
             ImageView segment = new ImageView(this);
             segment.setImageResource(skinDrawable);
             board.addView(segment, new RelativeLayout.LayoutParams(cellSize, cellSize));
-            snakeSegments.add(segment);
+            wormSegments.add(segment);
         }
-        while (snakeSegments.size() > cells.size()) {
-            ImageView segment = snakeSegments.remove(snakeSegments.size() - 1);
+        while (wormSegments.size() > cells.size()) {
+            ImageView segment = wormSegments.remove(wormSegments.size() - 1);
             board.removeView(segment);
         }
         for (int i = 0; i < cells.size(); i++) {
-            place(snakeSegments.get(i), cells.get(i));
+            place(wormSegments.get(i), cells.get(i));
         }
 
-        SnakeEngine.Cell foodCell = engine.food();
+        WormEngine.Cell foodCell = engine.food();
         if (foodCell != null) {
             if (meat == null) {
                 meat = new ImageView(this);
@@ -178,7 +178,7 @@ public class Wormgame extends Activity {
         score2.setText(getString(R.string.score_format, engine.score()));
     }
 
-    private void place(ImageView view, SnakeEngine.Cell cell) {
+    private void place(ImageView view, WormEngine.Cell cell) {
         view.setX(cell.x * cellSize);
         view.setY(cell.y * cellSize);
     }
