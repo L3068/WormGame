@@ -1,10 +1,18 @@
 name: Android CI
 
 on:
+  # A push csak a main-en fut: PR-ágon a pull_request trigger fedi le a commitokat,
+  # így nem indul minden commitra két azonos futás.
   push:
-    branches: ["**"]
+    branches: [main]
   pull_request:
   workflow_dispatch:
+
+# Egy ágon/PR-en egyszerre csak egy futás legyen: a gyors egymás utáni pusholásnál
+# a régebbi futás megszakad. A main-en nem szakítunk meg semmit.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
