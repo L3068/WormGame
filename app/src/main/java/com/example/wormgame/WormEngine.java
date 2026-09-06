@@ -297,6 +297,13 @@ public final class WormEngine {
             return false;
         }
 
+        // A kaja koordinátáit is ellenőrizni kell, mielőtt bármit módosítanánk:
+        // a -1,-1 a kaja hiányát jelenti, minden más értéknek a pályán kell lennie.
+        boolean noFood = data[3] == -1 && data[4] == -1;
+        if (!noFood && (data[3] < 0 || data[4] < 0 || data[3] >= columns || data[4] >= rows)) {
+            return false;
+        }
+
         List<Cell> restored = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
             int x = data[6 + i * 2];
@@ -313,7 +320,7 @@ public final class WormEngine {
         state = State.values()[data[1]];
         direction = Direction.values()[data[2]];
         pendingDirection = direction;
-        food = data[3] >= 0 && data[4] >= 0 ? new Cell(data[3], data[4]) : null;
+        food = noFood ? null : new Cell(data[3], data[4]);
         return true;
     }
 

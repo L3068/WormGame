@@ -288,6 +288,25 @@ public class WormEngineTest {
     }
 
     @Test
+    public void restoreRejectsInvalidFoodCoordinates() {
+        engine.setBodyForTest(line(5, 5, 3), Direction.RIGHT);
+        engine.setFoodForTest(new Cell(1, 1));
+        List<Cell> body = engine.body();
+        Cell food = engine.food();
+
+        // pályán kívüli kaja
+        assertFalse(engine.restore(new int[]{0, 1, 3, 99, 2, 1, 0, 0}));
+        // csak az egyik koordináta -1: nem "nincs kaja", hanem hibás adat
+        assertFalse(engine.restore(new int[]{0, 1, 3, -1, 2, 1, 0, 0}));
+        assertFalse(engine.restore(new int[]{0, 1, 3, 2, -1, 1, 0, 0}));
+        // negatív, de nem -1
+        assertFalse(engine.restore(new int[]{0, 1, 3, -5, -5, 1, 0, 0}));
+
+        assertEquals(body, engine.body());
+        assertEquals(food, engine.food());
+    }
+
+    @Test
     public void snapshotHandlesMissingFood() {
         engine.setBodyForTest(line(5, 5, 3), Direction.RIGHT);
         engine.setFoodForTest(null);

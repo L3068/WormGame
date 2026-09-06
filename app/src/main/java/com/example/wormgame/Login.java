@@ -42,8 +42,11 @@ public class Login extends AppCompatActivity {
         if (!FirebaseApp.getApps(this).isEmpty()) {
             FirebaseAuth.getInstance().signOut();
         }
+        // CLEAR_TASK + NEW_TASK üríti ki biztosan a tasköt: a CLEAR_TOP csak akkor
+        // tenne bármit, ha a MainActivity még a stacken lenne, márpedig sikeres
+        // bejelentkezés után az befejezi magát.
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
