@@ -31,4 +31,5 @@
     <string name="skin_green_desc">Green worm skin</string>
     <string name="skin_red_desc">Red worm skin</string>
     <string name="skin_purple_desc">Purple worm skin</string>
+    <string name="firebase_missing">Firebase is not configured (google-services.json is missing), so sign-in is unavailable.</string>
 </resources>

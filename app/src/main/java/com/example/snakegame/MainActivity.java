@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,13 +35,24 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        mAuth = FirebaseAuth.getInstance();
-
         emailEditText = findViewById(R.id.editTextText);
         passwordEditText = findViewById(R.id.editTextTextPassword);
         loginButton = findViewById(R.id.button5);
-
         Button register = findViewById(R.id.button2);
+
+        // google-services.json nélkül nincs alapértelmezett FirebaseApp, és a
+        // FirebaseAuth.getInstance() kivételt dobna. Ilyenkor összeomlás helyett
+        // letiltjuk a bejelentkezést, és megmondjuk, mi hiányzik (lásd README).
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            Toast.makeText(this, R.string.firebase_missing, Toast.LENGTH_LONG).show();
+            emailEditText.setEnabled(false);
+            passwordEditText.setEnabled(false);
+            loginButton.setEnabled(false);
+            register.setEnabled(false);
+            return;
+        }
+
+        mAuth = FirebaseAuth.getInstance();
         register.setOnClickListener(v -> startActivity(new Intent(this, Register.class)));
         loginButton.setOnClickListener(v -> loginUser());
     }

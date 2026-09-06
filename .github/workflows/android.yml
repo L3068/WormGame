@@ -31,7 +31,6 @@ jobs:
         run: ./gradlew --no-daemon assembleDebug
 
       - name: Android Lint
-        continue-on-error: true
         run: ./gradlew --no-daemon lintDebug
 
       - name: Upload reports

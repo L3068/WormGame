@@ -31,4 +31,5 @@
     <string name="skin_green_desc">Zöld kukac kinézet</string>
     <string name="skin_red_desc">Piros kukac kinézet</string>
     <string name="skin_purple_desc">Lila kukac kinézet</string>
+    <string name="firebase_missing">A Firebase nincs beállítva (hiányzik a google-services.json), ezért a bejelentkezés nem érhető el.</string>
 </resources>

@@ -41,7 +41,9 @@ Szükséges: JDK 17, Android SDK (compileSdk 35), minimum Android 9 (API 28) esz
 ## Firebase beállítása
 
 A `google-services.json` projektspecifikus, ezért **nincs verziókövetve**. Nélküle a projekt
-lefordul és a játék játszható, de a bejelentkezés és a regisztráció nem működik.
+lefordul és az alkalmazás elindul, de a bejelentkezés és a regisztráció le van tiltva
+(a képernyő meg is mondja, mi hiányzik). Mivel a játék a bejelentkezés mögött van, a
+játékhoz saját Firebase konfiguráció kell.
 
 Saját Firebase háttér beüzemeléséhez:
 
