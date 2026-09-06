@@ -32,4 +32,9 @@
     <string name="skin_red_desc">Red worm skin</string>
     <string name="skin_purple_desc">Purple worm skin</string>
     <string name="firebase_missing">Firebase is not configured (google-services.json is missing), so sign-in is unavailable.</string>
+    <string name="button_logout_name">Log out</string>
+    <string name="forgot_password_name">Forgot your password?</string>
+    <string name="reset_sent">If the address is registered, we have sent a password reset email.</string>
+    <string name="reset_failed_format">Could not send the reset email: %1$s</string>
+    <string name="bestscore_format">Best: %1$d</string>
 </resources>

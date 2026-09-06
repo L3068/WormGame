@@ -21,6 +21,11 @@ public class Wormgame extends Activity {
     /** A pálya ennyi cella széles és magas. */
     private static final int GRID_SIZE = 19;
 
+    /** A mentett játékállapot kulcsa elforgatáskor. */
+    private static final String STATE_ENGINE = "engine";
+    private static final String STATE_SKIN = "skin";
+    private static final String STATE_BEST = "best";
+
     private RelativeLayout board, border;
     private LinearLayout lilu;
     private Button newgame, resume, playagain, score, score2;
@@ -29,8 +34,12 @@ public class Wormgame extends Activity {
     private ImageView meat;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private WormEngine engine;
+    private ScoreRepository scores;
     private int skinDrawable = R.drawable.worm;
     private int cellSize;
+    private int bestScore;
+    /** A pontszám mentése egy játszmán belül csak egyszer történhet meg. */
+    private boolean scoreSaved;
 
     private final Runnable tick = new Runnable() {
         @Override
@@ -65,6 +74,13 @@ public class Wormgame extends Activity {
         score2 = findViewById(R.id.score2);
 
         engine = new WormEngine(GRID_SIZE, GRID_SIZE);
+        scores = ScoreRepository.create(this);
+        scores.loadBestScore(best -> {
+            bestScore = best;
+            if (engine.isGameOver()) {
+                showScoreText();
+            }
+        });
 
         board.setVisibility(View.INVISIBLE);
         playagain.setVisibility(View.INVISIBLE);
@@ -81,6 +97,48 @@ public class Wormgame extends Activity {
         pauseButton.setOnClickListener(v -> pauseGame());
         resume.setOnClickListener(v -> resumeGame());
         playagain.setOnClickListener(v -> startGame());
+
+        if (savedInstanceState != null) {
+            restoreGame(savedInstanceState);
+        }
+    }
+
+    /**
+     * Elforgatás (vagy más konfigurációváltás) utáni visszaállás: a menet
+     * szünetben folytatódik, hogy a játékos ne veszítsen életet a fordulás alatt.
+     */
+    private void restoreGame(Bundle savedInstanceState) {
+        int[] data = savedInstanceState.getIntArray(STATE_ENGINE);
+        if (data == null || !engine.restore(data)) {
+            return;
+        }
+        skinDrawable = savedInstanceState.getInt(STATE_SKIN, R.drawable.worm);
+        bestScore = savedInstanceState.getInt(STATE_BEST, bestScore);
+        scoreSaved = engine.isGameOver();
+
+        board.post(() -> {
+            cellSize = cellSize();
+            render();
+            if (engine.isGameOver()) {
+                showGameOver();
+            } else {
+                engine.pause();
+                board.setVisibility(View.INVISIBLE);
+                newgame.setVisibility(View.VISIBLE);
+                resume.setVisibility(View.VISIBLE);
+                score2.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (engine.state() != WormEngine.State.READY) {
+            outState.putIntArray(STATE_ENGINE, engine.snapshot());
+            outState.putInt(STATE_SKIN, skinDrawable);
+            outState.putInt(STATE_BEST, bestScore);
+        }
     }
 
     private void startGame() {
@@ -105,7 +163,8 @@ public class Wormgame extends Activity {
         wormSegments.clear();
         meat = null;
 
-        cellSize = Math.max(1, Math.min(board.getWidth(), board.getHeight()) / GRID_SIZE);
+        cellSize = cellSize();
+        scoreSaved = false;
         engine.reset();
         engine.start();
 
@@ -183,10 +242,31 @@ public class Wormgame extends Activity {
         view.setY(cell.y * cellSize);
     }
 
+    /** A cella mérete a pálya aktuális méretéből – álló és fekvő tájolásban is helyes. */
+    private int cellSize() {
+        return Math.max(1, Math.min(board.getWidth(), board.getHeight()) / GRID_SIZE);
+    }
+
+    /** A játék vége szöveg: az elért pontszám, és ha ismert, a legjobb eredmény. */
+    private void showScoreText() {
+        String text = getString(R.string.yourscore_format, engine.score());
+        if (scores.isAvailable() && bestScore > 0) {
+            text += "\n" + getString(R.string.bestscore_format, bestScore);
+        }
+        score.setText(text);
+    }
+
     private void showGameOver() {
         handler.removeCallbacks(tick);
+
+        if (!scoreSaved) {
+            scoreSaved = true;
+            scores.saveScore(engine.score());
+            bestScore = Math.max(bestScore, engine.score());
+        }
+
         border.setBackgroundColor(ContextCompat.getColor(this, R.color.red));
-        score.setText(getString(R.string.yourscore_format, engine.score()));
+        showScoreText();
         score.setVisibility(View.VISIBLE);
         playagain.setVisibility(View.VISIBLE);
         // A pálya a testvérnézetek fölé rajzolódik, ezért a játék vége panelt

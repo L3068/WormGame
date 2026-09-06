@@ -257,6 +257,67 @@ public final class WormEngine {
     }
 
     /**
+     * A teljes állapot egyetlen int tömbben, hogy a képernyő elforgatásakor
+     * menthető és visszaállítható legyen. Formátum:
+     * {@code [pontszám, állapot, irány, kajaX, kajaY, hossz, x0,y0, x1,y1, ...]}.
+     * A kaja hiányát -1,-1 jelöli.
+     */
+    public int[] snapshot() {
+        int[] data = new int[6 + body.size() * 2];
+        data[0] = score;
+        data[1] = state.ordinal();
+        data[2] = direction.ordinal();
+        data[3] = food != null ? food.x : -1;
+        data[4] = food != null ? food.y : -1;
+        data[5] = body.size();
+        int i = 6;
+        for (Cell cell : body) {
+            data[i++] = cell.x;
+            data[i++] = cell.y;
+        }
+        return data;
+    }
+
+    /**
+     * A {@link #snapshot()} által mentett állapot visszatöltése.
+     *
+     * @return true, ha az adat értelmes volt és sikerült visszaállni; hibás vagy
+     *         hiányos adatnál false, ilyenkor az állapot változatlan marad
+     */
+    public boolean restore(int[] data) {
+        if (data == null || data.length < 6) {
+            return false;
+        }
+        int length = data[5];
+        if (length <= 0 || data.length != 6 + length * 2) {
+            return false;
+        }
+        if (data[1] < 0 || data[1] >= State.values().length
+                || data[2] < 0 || data[2] >= Direction.values().length) {
+            return false;
+        }
+
+        List<Cell> restored = new ArrayList<>(length);
+        for (int i = 0; i < length; i++) {
+            int x = data[6 + i * 2];
+            int y = data[7 + i * 2];
+            if (x < 0 || y < 0 || x >= columns || y >= rows) {
+                return false;
+            }
+            restored.add(new Cell(x, y));
+        }
+
+        body.clear();
+        body.addAll(restored);
+        score = data[0];
+        state = State.values()[data[1]];
+        direction = Direction.values()[data[2]];
+        pendingDirection = direction;
+        food = data[3] >= 0 && data[4] >= 0 ? new Cell(data[3], data[4]) : null;
+        return true;
+    }
+
+    /**
      * Csak tesztekhez: konkrét állapot beállítása, hogy a szabályok véletlen
      * kajaelhelyezés nélkül is ellenőrizhetők legyenek. A lista első eleme a fej.
      */

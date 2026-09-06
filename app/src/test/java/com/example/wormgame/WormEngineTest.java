@@ -3,6 +3,7 @@ package com.example.wormgame;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.example.wormgame.WormEngine.Cell;
@@ -223,6 +224,78 @@ public class WormEngineTest {
         fresh.step();
 
         assertEquals(head, fresh.head());
+    }
+
+    @Test
+    public void snapshotRoundTripPreservesTheGame() {
+        engine.setBodyForTest(line(5, 5, 4), Direction.RIGHT);
+        engine.setFoodForTest(new Cell(2, 8));
+        engine.requestDirection(Direction.DOWN);
+        engine.step();
+
+        int[] data = engine.snapshot();
+        WormEngine restored = new WormEngine(10, 10, new Random(99));
+        assertTrue(restored.restore(data));
+
+        assertEquals(engine.body(), restored.body());
+        assertEquals(engine.food(), restored.food());
+        assertEquals(engine.score(), restored.score());
+        assertEquals(engine.state(), restored.state());
+        assertEquals(engine.direction(), restored.direction());
+    }
+
+    /** Elforgatás után a menet ott folytatódik, ahol abbamaradt. */
+    @Test
+    public void restoredGameContinuesIdentically() {
+        engine.setBodyForTest(line(5, 5, 3), Direction.RIGHT);
+        engine.setFoodForTest(new Cell(9, 9));
+
+        WormEngine restored = new WormEngine(10, 10, new Random(1));
+        assertTrue(restored.restore(engine.snapshot()));
+
+        engine.step();
+        restored.step();
+        assertEquals(engine.head(), restored.head());
+        assertEquals(engine.body(), restored.body());
+    }
+
+    @Test
+    public void gameOverStateSurvivesTheSnapshot() {
+        while (!engine.isGameOver()) {
+            engine.step();
+        }
+        int score = engine.score();
+
+        WormEngine restored = new WormEngine(10, 10, new Random(5));
+        assertTrue(restored.restore(engine.snapshot()));
+
+        assertEquals(State.GAME_OVER, restored.state());
+        assertEquals(score, restored.score());
+    }
+
+    @Test
+    public void restoreRejectsBrokenDataAndKeepsCurrentState() {
+        engine.setBodyForTest(line(5, 5, 3), Direction.RIGHT);
+        List<Cell> before = engine.body();
+
+        assertFalse(engine.restore(null));
+        assertFalse(engine.restore(new int[]{1, 2, 3}));
+        assertFalse(engine.restore(new int[]{0, 1, 3, 1, 1, 2, 0, 0}));            // rossz hossz
+        assertFalse(engine.restore(new int[]{0, 1, 3, 1, 1, 1, 99, 99}));          // pályán kívüli cella
+        assertFalse(engine.restore(new int[]{0, 42, 3, 1, 1, 1, 0, 0}));           // ismeretlen állapot
+
+        assertEquals(before, engine.body());
+    }
+
+    @Test
+    public void snapshotHandlesMissingFood() {
+        engine.setBodyForTest(line(5, 5, 3), Direction.RIGHT);
+        engine.setFoodForTest(null);
+
+        WormEngine restored = new WormEngine(10, 10, new Random(2));
+        assertTrue(restored.restore(engine.snapshot()));
+
+        assertNull(restored.food());
     }
 
     /** Vízszintes kukac fejjel a megadott cellában, jobbra tartva. */

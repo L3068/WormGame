@@ -8,22 +8,25 @@ mobiljáték-fejlesztés, a többnyelvűség és az adattárolás gyakorlása vo
 
 ## Funkciók
 
-- E-mail/jelszó alapú regisztráció és bejelentkezés (Firebase Authentication)
-- A felhasználónév mentése a Firebase Realtime Database-be
+- E-mail/jelszó alapú regisztráció, bejelentkezés, kijelentkezés és
+  jelszó-visszaállítás (Firebase Authentication)
+- A felhasználónév és a pontszámok mentése a Firebase Realtime Database-be,
+  a legjobb eredmény megjelenítése a játék végén
 - Három választható kukac-kinézet, `SharedPreferences`-ben megjegyezve
 - Rácsalapú kukacjáték: falnak és önmagának ütközés, növekedés, pontszám, fokozatos gyorsulás
-- Szünet / folytatás / új játék, magyar és angol nyelvű felület
+- Szünet / folytatás / új játék, álló és fekvő tájolás, magyar és angol nyelvű felület
 
 ## Felépítés
 
 | Fájl | Szerep |
 | --- | --- |
-| `MainActivity` | Bejelentkezés, továbblépés a regisztrációra |
+| `MainActivity` | Bejelentkezés, jelszó-visszaállítás, továbblépés a regisztrációra |
 | `Register` | Regisztráció, felhasználónév mentése |
-| `Login` | Főmenü: játék indítása, kinézet választása |
+| `Login` | Főmenü: játék indítása, kinézet választása, kijelentkezés |
 | `SkinChange` | A kukac kinézetének kiválasztása és mentése |
 | `Wormgame` | A játék képernyője: kirajzolás és vezérlés |
 | `WormEngine` | A játékszabályok Android-függőség nélkül (egységtesztelhető) |
+| `ScoreRepository` | Pontszámok mentése és a legjobb eredmény lekérdezése |
 
 A játéklogika szándékosan külön, tiszta Java osztályban él, így emulátor nélkül is
 tesztelhető – lásd `app/src/test/java/com/example/wormgame/WormEngineTest.java`.
@@ -56,13 +59,19 @@ Saját Firebase háttér beüzemeléséhez:
 A build automatikusan felismeri a fájlt: ha ott van, alkalmazza a Google Services plugint,
 ha nincs, figyelmeztetéssel kihagyja.
 
-> Ha korábban `com.example.snakegame` néven volt regisztrálva az alkalmazás a Firebase
-> projektben, vegyél fel egy új Android appot `com.example.wormgame` csomagnévvel, és
-> töltsd le hozzá az új `google-services.json`-t – a régi fájllal a build hibára fut
-> („No matching client found for package name").
+## Adatszerkezet a Realtime Database-ben
+
+```
+users/<uid>/username      – a regisztrációkor megadott felhasználónév
+users/<uid>/highScore     – az eddigi legjobb eredmény
+users/<uid>/scores/<id>   – { score, timestamp } minden befejezett játszmáról
+```
+
+Az adatbázis-szabályoknak engedniük kell, hogy a bejelentkezett felhasználó a saját
+`users/<uid>` ágát írja és olvassa.
 
 ## Ismert korlátok
 
-- Nincs kijelentkezés és jelszó-visszaállítás.
-- A pontszámok csak helyben látszanak, nem kerülnek fel a Realtime Database-be.
-- A játék képernyője álló tájolásra van rögzítve.
+- Nincs ranglista: mindenki csak a saját legjobb eredményét látja.
+- A kukac-kinézet csak helyben, eszközönként tárolódik, nem a fiókhoz kötve.
+- Bejelentkezés nélkül nem lehet játszani; nincs vendég mód.
