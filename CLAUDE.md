@@ -18,9 +18,8 @@ Android (Java) kukacjáték, Gradle Kotlin DSL.
 - **A projekt neve Worm, nem Snake.** A források a `com/example/wormgame`
   könyvtárban, `com.example.wormgame` csomagban élnek – ezt ne írd át
   `snakegame`-re, és ne mozgasd át a fájlokat.
-- Az `applicationId` viszont `com.example.snakegame` maradt, mert a Firebase
-  projektben ezzel a névvel van regisztrálva az app; ugyanezért maradt a
-  `SnakeGamePrefs` SharedPreferences-fájlnév is.
+- Az `applicationId` szintén `com.example.wormgame`. A Firebase projektben ezzel
+  a csomagnévvel kell regisztrálni az alkalmazást.
 - A játékszabályok az Android-független `WormEngine` osztályban élnek,
   hozzá egységtesztek: `./gradlew testDebugUnitTest`.
 - A `google-services.json` nincs verziókövetve; a Google Services plugin

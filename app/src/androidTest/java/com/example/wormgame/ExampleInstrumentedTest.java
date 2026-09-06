@@ -21,8 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        // getPackageName() az applicationId-t adja vissza, ami a Firebase
-        // regisztráció miatt maradt snakegame (lásd app/build.gradle.kts).
-        assertEquals("com.example.snakegame", appContext.getPackageName());
+        assertEquals("com.example.wormgame", appContext.getPackageName());
     }
 }

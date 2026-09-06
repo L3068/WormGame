@@ -48,15 +48,18 @@ játékhoz saját Firebase konfiguráció kell.
 Saját Firebase háttér beüzemeléséhez:
 
 1. Hozz létre egy projektet a [Firebase konzolban](https://console.firebase.google.com/).
-2. Adj hozzá egy Android alkalmazást `com.example.snakegame` csomagnévvel.
-   (Ez az `applicationId`; a forráskód csomagneve `com.example.wormgame`, a kettő
-   szándékosan tér el – lásd `app/build.gradle.kts`.)
+2. Adj hozzá egy Android alkalmazást `com.example.wormgame` csomagnévvel.
 3. Kapcsold be az **Authentication → Email/Password** szolgáltatást.
 4. Hozz létre egy **Realtime Database**-t.
 5. Töltsd le a `google-services.json` fájlt, és másold az `app/` könyvtárba.
 
 A build automatikusan felismeri a fájlt: ha ott van, alkalmazza a Google Services plugint,
 ha nincs, figyelmeztetéssel kihagyja.
+
+> Ha korábban `com.example.snakegame` néven volt regisztrálva az alkalmazás a Firebase
+> projektben, vegyél fel egy új Android appot `com.example.wormgame` csomagnévvel, és
+> töltsd le hozzá az új `google-services.json`-t – a régi fájllal a build hibára fut
+> („No matching client found for package name").
 
 ## Ismert korlátok
 

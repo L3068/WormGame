@@ -8,12 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SkinChange extends AppCompatActivity {
 
-    /**
-     * A játék beállításait tároló SharedPreferences neve. Ez egy tárolási kulcs,
-     * nem felhasználónak szánt név – átnevezésével a már telepített példányokon
-     * elveszne a korábban kiválasztott kinézet, ezért maradt a régi értéken.
-     */
-    public static final String PREFS_NAME = "SnakeGamePrefs";
+    /** A játék beállításait tároló SharedPreferences neve. */
+    public static final String PREFS_NAME = "WormGamePrefs";
     /** A kiválasztott kinézet kulcsa. */
     public static final String KEY_SELECTED_SKIN = "selected_skin";
 
