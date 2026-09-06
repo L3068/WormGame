@@ -67,8 +67,13 @@ users/<uid>/highScore     – az eddigi legjobb eredmény
 users/<uid>/scores/<id>   – { score, timestamp } minden befejezett játszmáról
 ```
 
-Az adatbázis-szabályoknak engedniük kell, hogy a bejelentkezett felhasználó a saját
-`users/<uid>` ágát írja és olvassa.
+A hozzá tartozó szabályok a repóban vannak: `database.rules.json`. Másold be a
+Firebase konzol **Realtime Database → Rules** fülére (vagy telepítsd a Firebase
+CLI-vel). Csak a bejelentkezett felhasználó éri el a saját `users/<uid>` ágát,
+minden más tiltott; a szabályok a mezők típusát is ellenőrzik.
+
+Alapértelmezésben az új adatbázis vagy zárolt (minden írás elbukik), vagy teszt
+módban van (30 napig bárki írhatja) – egyik sem jó, ezért ezt a lépést ne hagyd ki.
 
 ## Ismert korlátok
 
